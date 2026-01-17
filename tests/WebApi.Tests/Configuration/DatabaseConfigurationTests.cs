@@ -149,8 +149,8 @@ public class DatabaseConfigurationTests
                     ["ConnectionStrings:DefaultConnection"] = "Server=192.0.2.1,1433;Database=NonExistentDb;User Id=sa;Password=InvalidPassword123!;TrustServerCertificate=true;Connect Timeout=5",
                     ["Database:Provider"] = "InMemory", // Force in-memory database
                     ["Jwt:Secret"] = "TestJwtSecret_ForDatabaseFallbackTests_ChangeMe_1234567890",
-                    ["Jwt:Issuer"] = "TodoAppApi",
-                    ["Jwt:Audience"] = "TodoAppClient",
+                    ["Jwt:Issuer"] = "AppApi",
+                    ["Jwt:Audience"] = "AppClient",
                     ["Cors:AllowedOrigins:0"] = "http://localhost:5026"
                 });
             });

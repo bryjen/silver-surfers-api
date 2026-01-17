@@ -9,8 +9,6 @@ using WebApi.Data;
 using WebApi.Middleware;
 using WebApi.Services.Auth;
 using WebApi.Services.Email;
-using WebApi.Services.Tag;
-using WebApi.Services.Todo;
 using WebApi.Services.Validation;
 using WebApi.Validators;
 
@@ -37,8 +35,6 @@ builder.Services.ConfigureResponseCompression(builder.Environment);
 builder.Services.ConfigureResponseCaching(builder.Environment);
 builder.Services.ConfigureOpenTelemetry(builder.Configuration, builder.Logging, builder.Environment);
 builder.Services.ConfigureAuthServices(builder.Configuration);
-builder.Services.AddScoped<TodoService>();
-builder.Services.AddScoped<TagService>();
 
 var app = builder.Build();
 
@@ -66,9 +62,9 @@ if (app.Environment.IsProduction())
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Todo App API v1");
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
     options.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
-    options.DocumentTitle = "Todo App API Documentation";
+    options.DocumentTitle = "API Documentation";
     options.DefaultModelsExpandDepth(2);
     options.DefaultModelExpandDepth(2);
     options.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);

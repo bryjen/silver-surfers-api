@@ -1,6 +1,6 @@
 output "webapi_url" {
   description = "URL of the WebApi Cloud Run service"
-  value       = google_cloud_run_service.webapi.status[0].url
+  value       = google_cloud_run_service.silver-surfer-webapi.status[0].url
 }
 
 output "webapi_cors_env_var" {

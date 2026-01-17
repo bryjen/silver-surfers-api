@@ -127,8 +127,6 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>
     private void SeedTestData(AppDbContext context)
     {
         // Clear existing data
-        context.TodoItems.RemoveRange(context.TodoItems);
-        context.Tags.RemoveRange(context.Tags);
         context.Users.RemoveRange(context.Users);
         context.SaveChanges();
 
@@ -156,78 +154,6 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>
         };
 
         context.Users.AddRange(user1, user2);
-        context.SaveChanges();
-
-        // Create test tags
-        var workTag = new Tag
-        {
-            Id = Guid.NewGuid(),
-            Name = "Work",
-            Color = "#FF5733",
-            UserId = user1.Id
-        };
-
-        var personalTag = new Tag
-        {
-            Id = Guid.NewGuid(),
-            Name = "Personal",
-            Color = "#3498DB",
-            UserId = user1.Id
-        };
-
-        var urgentTag = new Tag
-        {
-            Id = Guid.NewGuid(),
-            Name = "Urgent",
-            Color = "#FF0000",
-            UserId = user2.Id
-        };
-
-        context.Tags.AddRange(workTag, personalTag, urgentTag);
-        context.SaveChanges();
-
-        // Create test todos
-        var todo1 = new TodoItem
-        {
-            Id = Guid.NewGuid(),
-            Title = "Test Todo 1",
-            Description = "First test todo",
-            IsCompleted = false,
-            Priority = Priority.High,
-            DueDate = DateTime.UtcNow.AddDays(1),
-            UserId = user1.Id,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-        todo1.Tags.Add(workTag);
-
-        var todo2 = new TodoItem
-        {
-            Id = Guid.NewGuid(),
-            Title = "Test Todo 2",
-            Description = "Second test todo",
-            IsCompleted = true,
-            Priority = Priority.Medium,
-            DueDate = DateTime.UtcNow.AddDays(2),
-            UserId = user1.Id,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-
-        var todo3 = new TodoItem
-        {
-            Id = Guid.NewGuid(),
-            Title = "Other User Todo",
-            Description = "Todo belonging to another user",
-            IsCompleted = false,
-            Priority = Priority.Low,
-            DueDate = null,
-            UserId = user2.Id,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-
-        context.TodoItems.AddRange(todo1, todo2, todo3);
         context.SaveChanges();
     }
 }

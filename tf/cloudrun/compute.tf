@@ -2,13 +2,13 @@
 # Cloud Run Service: WebApi
 ########################################
 
-resource "google_cloud_run_service" "webapi" {
+resource "google_cloud_run_service" "silver-surfer-webapi" {
   name     = "silver-surfer-webapi"
   location = local.cloud_run_location
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 
   template {
     spec {
@@ -149,8 +149,8 @@ resource "google_cloud_run_service" "webapi" {
 ########################################
 
 resource "google_cloud_run_service_iam_member" "webapi_public" {
-  service  = google_cloud_run_service.webapi.name
-  location = google_cloud_run_service.webapi.location
+  service  = google_cloud_run_service.silver-surfer-webapi.name
+  location = google_cloud_run_service.silver-surfer-webapi.location
   role     = "roles/run.invoker"
   member   = "allUsers"
 }

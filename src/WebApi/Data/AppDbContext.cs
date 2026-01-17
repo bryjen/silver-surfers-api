@@ -9,8 +9,6 @@ public class AppDbContext(
     : DbContext(options)
 {
     public DbSet<User> Users { get; set; }
-    public DbSet<TodoItem> TodoItems { get; set; }
-    public DbSet<Tag> Tags { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<PasswordResetRequest> PasswordResetRequests { get; set; }
 
@@ -62,7 +60,7 @@ public class AppDbContext(
 
         // sets the default schema for PostgreSQL
         // re-set when actually using the template
-        modelBuilder.HasDefaultSchema("asp_template");
+        modelBuilder.HasDefaultSchema("silver_surfers_main");
 
         modelBuilder.Entity<User>(entity =>
         {
@@ -82,16 +80,6 @@ public class AppDbContext(
             entity.Property(e => e.ProviderUserId).HasMaxLength(255);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-            entity.HasMany(e => e.TodoItems)
-                .WithOne(e => e.User)
-                .HasForeignKey(e => e.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(e => e.Tags)
-                .WithOne(e => e.User)
-                .HasForeignKey(e => e.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasMany(e => e.RefreshTokens)
                 .WithOne(e => e.User)
@@ -134,39 +122,6 @@ public class AppDbContext(
                 .WithMany(e => e.PasswordResetRequests)
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-        });
-
-        modelBuilder.Entity<TodoItem>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            
-            entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.Description).HasMaxLength(1000);
-            entity.Property(e => e.IsCompleted).HasDefaultValue(false);
-            entity.Property(e => e.Priority).HasDefaultValue(Priority.Medium);
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-            entity.HasMany(e => e.Tags)
-                .WithMany(e => e.TodoItems)
-                .UsingEntity<Dictionary<string, object>>(
-                    "TodoItemTag",
-                    j => j.HasOne<Tag>().WithMany().HasForeignKey("TagId").OnDelete(DeleteBehavior.NoAction),
-                    j => j.HasOne<TodoItem>().WithMany().HasForeignKey("TodoItemId").OnDelete(DeleteBehavior.NoAction),
-                    j =>
-                    {
-                        j.HasKey("TodoItemId", "TagId");
-                    });
-        });
-
-        modelBuilder.Entity<Tag>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            
-            entity.Property(e => e.Name).IsRequired().HasMaxLength(50);
-            entity.Property(e => e.Color).IsRequired().HasMaxLength(7); // #RRGGBB format
-
-            entity.HasIndex(e => new { e.UserId, e.Name }).IsUnique();
         });
     }
 }

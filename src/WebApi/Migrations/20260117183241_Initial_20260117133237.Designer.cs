@@ -12,34 +12,19 @@ using WebApi.Data;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260116035601_Initial_20260115225557")]
-    partial class Initial_20260115225557
+    [Migration("20260117183241_Initial_20260117133237")]
+    partial class Initial_20260117133237
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("asp_template")
+                .HasDefaultSchema("silver_surfers_main")
                 .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("TodoItemTag", b =>
-                {
-                    b.Property<Guid>("TodoItemId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TagId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("TodoItemId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("TodoItemTag", "asp_template");
-                });
 
             modelBuilder.Entity("WebApi.Models.PasswordResetRequest", b =>
                 {
@@ -70,7 +55,7 @@ namespace WebApi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PasswordResetRequests", "asp_template");
+                    b.ToTable("PasswordResetRequests", "silver_surfers_main");
                 });
 
             modelBuilder.Entity("WebApi.Models.RefreshToken", b =>
@@ -88,10 +73,12 @@ namespace WebApi.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ReplacedByToken")
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("RevocationReason")
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime?>("RevokedAt")
                         .HasColumnType("timestamp with time zone");
@@ -111,82 +98,7 @@ namespace WebApi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", "asp_template");
-                });
-
-            modelBuilder.Entity("WebApi.Models.Tag", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasMaxLength(7)
-                        .HasColumnType("character varying(7)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId", "Name")
-                        .IsUnique();
-
-                    b.ToTable("Tags", "asp_template");
-                });
-
-            modelBuilder.Entity("WebApi.Models.TodoItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<DateTime?>("DueDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsCompleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<int>("Priority")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(1);
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("TodoItems", "asp_template");
+                    b.ToTable("RefreshTokens", "silver_surfers_main");
                 });
 
             modelBuilder.Entity("WebApi.Models.User", b =>
@@ -206,7 +118,8 @@ namespace WebApi.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Provider")
                         .IsRequired()
@@ -231,22 +144,7 @@ namespace WebApi.Migrations
                         .IsUnique()
                         .HasFilter("\"ProviderUserId\" IS NOT NULL");
 
-                    b.ToTable("Users", "asp_template");
-                });
-
-            modelBuilder.Entity("TodoItemTag", b =>
-                {
-                    b.HasOne("WebApi.Models.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("WebApi.Models.TodoItem", null)
-                        .WithMany()
-                        .HasForeignKey("TodoItemId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                    b.ToTable("Users", "silver_surfers_main");
                 });
 
             modelBuilder.Entity("WebApi.Models.PasswordResetRequest", b =>
@@ -271,37 +169,11 @@ namespace WebApi.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WebApi.Models.Tag", b =>
-                {
-                    b.HasOne("WebApi.Models.User", "User")
-                        .WithMany("Tags")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("WebApi.Models.TodoItem", b =>
-                {
-                    b.HasOne("WebApi.Models.User", "User")
-                        .WithMany("TodoItems")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("WebApi.Models.User", b =>
                 {
                     b.Navigation("PasswordResetRequests");
 
                     b.Navigation("RefreshTokens");
-
-                    b.Navigation("Tags");
-
-                    b.Navigation("TodoItems");
                 });
 #pragma warning restore 612, 618
         }
